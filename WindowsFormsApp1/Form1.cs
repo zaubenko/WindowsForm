@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
@@ -32,25 +31,23 @@ namespace WindowsFormsApp1
         public void InitialTree()
         {
             treeView1.Nodes.Clear();
-            TreeNode root = new TreeNode
+            TreeNode derevo = new TreeNode
             {
-                Name = "rootName",
-                Text = "Teachers"
+                Text = "Teachers and student"
             };
-            treeView1.Nodes.Add(root);
+            treeView1.Nodes.Add(derevo);
             for (int index = 0; index < TeacherList.teacherlist.Count; index++)
             {
-                treeView1.Nodes[0].Nodes.Add(TeacherList.teacherlist[index].Name + " " + TeacherList.teacherlist[index].Surname);
+                treeView1.Nodes[0].Nodes.Add(TeacherList.teacherlist[index].Surname + " " + TeacherList.teacherlist[index].Name);
                 for (int jindex = 0; jindex < TeacherList.teacherlist[index].studentlist.Count(); jindex++)
                 {
-                    List<Student> lst = TeacherList.teacherlist[index].studentlist;
-                    treeView1.Nodes[0].Nodes[index].Nodes.Add(lst[jindex].Name + " " + lst[jindex].Surname);
+                    List<Student> students = TeacherList.teacherlist[index].studentlist;
+                    treeView1.Nodes[0].Nodes[index].Nodes.Add(students[jindex].Surname + " " + students[jindex].Name);
                 }
             }
-            treeView1.ExpandAll();
         }
 
-        
+
 
         private void InitialDataTableStudent(List<Student> students)
         {
@@ -69,8 +66,8 @@ namespace WindowsFormsApp1
                 {
                     datatable.Rows.Add(students[jindex].Name, students[jindex].Surname, students[jindex].Age, students[jindex].Adress.City, students[jindex].Adress.Street, students[jindex].Adress.NHouse, students[jindex].scores);
                 }
-                
-            
+
+
             }
             dataGridView1.DataSource = datatable;
         }
@@ -91,11 +88,6 @@ namespace WindowsFormsApp1
 
             }
             dataGridView2.DataSource = datatable;
-            
-        }
-        private void ButtonRefresh_Click(object sender, EventArgs e)
-        {
-            Components();
 
         }
         public void studentinitialize()
@@ -110,10 +102,10 @@ namespace WindowsFormsApp1
                     InitialDataTableStudent(lst);
                 }
             }
-            
+
         }
         private void chartininitial(List<Teacher> teachers)
-        { 
+        {
             chart1.Series["Teacher"].Points.Clear();
             for (int index = 0; index < teachers.Count; index++)
             {
@@ -131,20 +123,65 @@ namespace WindowsFormsApp1
                 }
             }
         }
+
+        private void Colored(List<Student> students)
+        {
+            var colorList = new List<Color>
+                            {
+                                Color.Red,
+                                Color.Purple,
+                                Color.Black,
+                                Color.Blue,
+                                Color.Green,
+                                Color.LightGreen,
+                                Color.LightSkyBlue,
+                                Color.Yellow
+                            };
+
+            for (int index = 0; index < TeacherList.teacherlist.Count; index++)
+            {
+                for (int k = 0; k < TeacherList.teacherlist[index].studentlist.Count; k++)
+                {
+                    students = TeacherList.teacherlist[index].studentlist;
+                    foreach (Student st in students)
+                    {
+                        for (int color = 0; color < students.Count;color++)
+                        {
+                            if (TeacherList.teacherlist[index].studentlist.Contains(st))
+                            {
+
+                                dataGridView1.Rows[k+index+index].Cells[0].Style.BackColor = colorList[index];
+                                dataGridView2.Rows[index].Cells[0].Style.BackColor = colorList[index];
+                            }
+                            else
+                            {
+                                index++;
+                                k++;
+                                color--;
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+    
+           
+       
         private void Components()
         {
             InitialTree();
             InitialDataTableTeacher(TeacherList.teacherlist);
             List<Student> lst = new List<Student>();
             InitialDataTableStudent(lst);
+            Colored(lst);
             chartininitial(TeacherList.teacherlist);
             chartininitial1();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void addTeacherToolStripMenuItem_Click(object sender, EventArgs e)
         {
