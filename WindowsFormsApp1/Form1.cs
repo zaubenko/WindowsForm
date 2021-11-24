@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
@@ -17,6 +21,7 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            TeacherList.Load();
             addteacher.SendT += Components;
             addstudent.SendS += Components;
             removeteacher.SendRemoveT += Components;
@@ -206,6 +211,14 @@ namespace WindowsFormsApp1
         {
             removestudent student = new removestudent();
             student.Show();
+        }
+        private void save()
+        {
+            File.WriteAllText(TeacherList.SaveDirectory, JsonConvert.SerializeObject(TeacherList.teacherlist));
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            save();
         }
     }
 }
